@@ -2,6 +2,8 @@
 #include <assert.h>
 #include <stdlib.h>
 
+#define prn fprintf(stderr, "str: %d, function: %s\n", __LINE__, __FUNCTION__)
+
 typedef unsigned char byte;
 typedef unsigned int word;
 typedef word address;
@@ -58,13 +60,18 @@ void test_mem()
 
 void load_data(FILE *stream)
 {
-    address a;
-    int n;
-    while (2==fscanf(stream, "%x%x", &a, &n))
+    unsigned int a = 0;
+    unsigned int n = 0;
+    unsigned int temp = 0;
+    while (2 == fscanf(stream, "%x%x", &a, &n))
     {
-        /*for ()
+    fprintf(stdout, "adr, n = %04x %04x\n", a, n);
+        for (int i = 0; i < n; i++)
         {
-        }*/
+            fscanf(stream, "%x", &temp);
+            b_write(a + i, (byte)temp);
+            printf("write: %02x\n", b_read(a+i));
+        }
     }
 }
 
@@ -86,13 +93,12 @@ void usage(const char *prog)
 int main(int argc, char *argv[])
 {
     test_mem();
-    return 0;
     if (argc - 1 == 0)
     {
         usage(argv[0]);
         exit(0);
     }
-    load_data(stdin);
+    load_file(argv[1]);
     return 0;
 }
 
@@ -122,3 +128,4 @@ void w_write (address adr, word val)
     mem[adr] = val;
     mem[adr + 1] = val >> 8;
 }
+
