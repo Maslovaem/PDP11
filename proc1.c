@@ -128,4 +128,10 @@ void w_write (address adr, word val)
     mem[adr] = val;
     mem[adr + 1] = val >> 8;
 }
-
+void mem_dump(address adr, int size)
+{
+    for (address i = adr; i < adr + size/2; size + 2)
+    {
+        printf("%06o: %06o %04x", w_read(i), w_read(i), w_read(i));
+    }
+}
