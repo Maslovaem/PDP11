@@ -9,6 +9,8 @@ typedef unsigned char byte;
 typedef unsigned int word;
 typedef word address;
 
+word reg[8];
+
 #define PDP11_MEMSIZE (64*1024)
 
 byte mem[PDP11_MEMSIZE];
@@ -24,6 +26,12 @@ enum level {DEBUG, TRACE, INFO, ERROR};
 enum level CURRENT_LEVEL = DEBUG;
 enum level set_log_level(enum level l);
 void log_(enum level l, const char* format, ...);
+
+void do_halt();
+void do_add();
+void do_mov();
+void do_nothing();
+void run();
 
 void test_mem()
 {
@@ -107,9 +115,7 @@ int main(int argc, char *argv[])
     }
     load_file(argv[1]);
 
-    mem_dump(0x40, 20);
-    printf("\n");
-    mem_dump(0x200, 0x26);
+    run();
 
     return 0;
 }
@@ -171,3 +177,60 @@ void log_(enum level l, const char* format, ...)
 
 }
 
+void run()
+{
+    address pc = 01000;
+    word w;
+
+    while(1)
+    {
+        w = w_read(pc);
+        log_(TRACE, "%06o %06o: ", pc, w);
+        pc += 2;
+
+        if ( (w & 0170000) == 0060000)
+        {
+            log_(TRACE, "add\n");
+            do_add();
+        }
+        else if ( (w & 0170000) == 0010000)
+        {
+            log_(TRACE, "mov\n");
+            do_mov();
+        }
+        else if ( (w & 0177777) == 0000000)
+        {
+            log_(TRACE, "halt\n");
+            do_halt();
+        }
+        else
+        {
+            log_(TRACE, "unknown\n");
+            do_nothing();
+        }
+
+
+
+    }
+}
+
+void do_halt()
+{
+    log_(INFO, "THE END!!!\n");
+    exit(0);
+}
+
+void do_add()
+{
+
+}
+
+void do_mov()
+{
+
+}
+
+void do_nothing()
+{
+
+}
