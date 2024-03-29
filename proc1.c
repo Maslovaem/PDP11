@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
 #define prn fprintf(stderr, "str: %d, function: %s\n", __LINE__, __FUNCTION__)
 
@@ -17,6 +18,13 @@ void b_write(address adr, byte value);
 word w_read(address adr);
 void w_write(address adr, word value);
 
+void mem_dump(address adr, int size);
+
+enum level {DEBUG, TRACE, INFO, ERROR};
+enum level CURRENT_LEVEL = DEBUG;
+enum level set_log_level(enum level l);
+void log_(enum level l, const char* format, ...);
+
 void test_mem()
 {
     address a;
@@ -25,27 +33,27 @@ void test_mem()
 
 
     // пишем байт, читаем байт
-    fprintf(stderr, "Read and write byte\n");
+    log_(TRACE, "Read and write byte\n");
     a = 0;
     b0 = 0x12;
     b_write(a, b0);
     bres = b_read(a);
-    fprintf(stderr, "a=%06o b0=%hhx bres=%hhx\n", a, b0, bres);
+    log_(TRACE, "a=%06o b0=%hhx bres=%hhx\n", a, b0, bres);
     assert(b0 == bres);
 
 
     // пишем слово, читаем слово
-    fprintf(stderr, "Write and read word\n");
+    log_(TRACE, "Write and read word\n");
     a = 2;
     w = 0x3456;
     w_write(a, w);
     wres = w_read(a);
-    fprintf(stderr, "a=%06o w=%04x wres=%04x\n", a, w, wres);
+    log_(TRACE, "a=%06o w=%04x wres=%04x\n", a, w, wres);
     assert(w == wres);
 
 
     // пишем 2 байта, читаем 1 слово
-    fprintf(stderr, "Write 2 bytes, read word\n");
+    log_(TRACE, "Write 2 bytes, read word\n");
     a = 4;
     w = 0xa1b2;
     b0 = 0xb2;
@@ -53,7 +61,7 @@ void test_mem()
     b_write(a, b0);
     b_write(a+1, b1);
     wres = w_read(a);
-    fprintf(stderr, "a=%06o b1=%02hhx b0=%02hhx wres=%04x\n", a, b1, b0, wres);
+    log_(TRACE, "a=%06o b1=%02hhx b0=%02hhx wres=%04x\n", a, b1, b0, wres);
     assert(w == wres);
 
 }
@@ -65,12 +73,10 @@ void load_data(FILE *stream)
     unsigned int temp = 0;
     while (2 == fscanf(stream, "%x%x", &a, &n))
     {
-    fprintf(stdout, "adr, n = %04x %04x\n", a, n);
         for (int i = 0; i < n; i++)
         {
             fscanf(stream, "%x", &temp);
             b_write(a + i, (byte)temp);
-            printf("write: %02x\n", b_read(a+i));
         }
     }
 }
@@ -88,10 +94,11 @@ void load_file(const char *filename)
 }
 void usage(const char *prog)
 {
-    printf("USAGE: %s file\n file - PDP11 execution fault", prog);
+    log_(ERROR, "USAGE: %s file\n file - PDP11 execution fault", prog);
 }
 int main(int argc, char *argv[])
 {
+    CURRENT_LEVEL = DEBUG;
     test_mem();
     if (argc - 1 == 0)
     {
@@ -99,6 +106,11 @@ int main(int argc, char *argv[])
         exit(0);
     }
     load_file(argv[1]);
+
+    mem_dump(0x40, 20);
+    printf("\n");
+    mem_dump(0x200, 0x26);
+
     return 0;
 }
 
@@ -128,10 +140,34 @@ void w_write (address adr, word val)
     mem[adr] = val;
     mem[adr + 1] = val >> 8;
 }
+
 void mem_dump(address adr, int size)
 {
-    for (address i = adr; i < adr + size/2; size + 2)
+
+    for (address i = adr; i < adr + size; i += 2)
     {
-        printf("%06o: %06o %04x", w_read(i), w_read(i), w_read(i));
+        log_(INFO, "%06o: %06o %04x\n", i, w_read(i), w_read(i));
     }
 }
+
+enum level set_log_level(enum level l)
+{
+    enum level previous = CURRENT_LEVEL;
+    CURRENT_LEVEL = l;
+    return previous;
+}
+
+void log_(enum level l, const char* format, ...)
+{
+    va_list ap;
+    va_start(ap, format);
+
+    if (l >= CURRENT_LEVEL)
+    {
+        vprintf(format, ap);
+    }
+
+    va_end(ap);
+
+}
+
