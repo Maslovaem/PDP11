@@ -1,3 +1,4 @@
 *.exe
 pdp11_tests-master/
 .vscode/
+data.txt
