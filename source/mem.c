@@ -1,19 +1,15 @@
 #include "../headers/mem.h"
 #include "../headers/logger.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 #define PDP11_MEMSIZE (64*1024)
 
 static byte mem[PDP11_MEMSIZE];
 word reg[8];
 
-struct Argument {
-    word value;
-    address adr;
-};
-
-extern struct Argument ss;
-extern struct Argument dd;i
+struct Argument ss;
+struct Argument dd;
 
 void b_write(address adr, byte value)
 {
@@ -58,3 +54,44 @@ void reg_dump()
         printf("r%d:%o ", i, reg[i]);
     }
 }
+
+struct Argument get_mr(word w)
+{
+    Argument res;
+
+    int r = w & 7;
+    int m = (w >> 3) & 7;
+
+    switch (m)
+    {
+        case 0:
+            res.adr = r;
+            res.value = reg[r];
+            log_(TRACE, "R%d ", r);
+            break;
+
+
+        case 1:
+            res.adr = reg[r];
+            res.value = w_read(res.adr);
+            log_(TRACE, "(R%d) ", r);
+            break;
+
+        case 2:
+            res.adr = reg[r];
+            res.value = w_read(res.adr);
+            reg[r] += 2;
+            if (r == 7)
+                log_(TRACE, "#%o ", res.value);
+            else
+                log_(TRACE, "(R%d)+ ", r);
+            break;
+
+        default:
+            log_(ERROR, "Mode %d not implemented yet!\n", m);
+            exit(1);
+    }
+
+    return res;
+}
+

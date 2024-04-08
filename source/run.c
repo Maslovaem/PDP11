@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "../headers/run.h"
 #include "../headers/mem.h"
 #include "../headers/logger.h"
@@ -14,28 +16,13 @@ void run()
         log_(TRACE, "%06o %06o: ", pc, w);
         pc += 2;
 
-        if ( (w & 0170000) == 0060000)
+        for (int i = 0; i < 3; i++)
         {
-            log_(TRACE, "add\n");
-            do_add();
+            if ( (w & command[i].mask) == command[i].opcode)
+            {
+                printf("%s\n", command[i].name);
+                command[i].do_command();
+            }
         }
-        else if ( (w & 0170000) == 0010000)
-        {
-            log_(TRACE, "mov\n");
-            do_mov();
-        }
-        else if ( (w & 0177777) == 0000000)
-        {
-            log_(TRACE, "halt\n");
-            do_halt();
-        }
-        else
-        {
-            log_(TRACE, "unknown\n");
-            do_nothing();
-        }
-
-
-
     }
 }
