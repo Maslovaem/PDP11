@@ -10,3 +10,5 @@ word w_read(address adr);
 void w_write(address adr, word value);
 
 void mem_dump(address adr, int size);
+
+void reg_dump();
