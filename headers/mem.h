@@ -4,10 +4,15 @@ typedef unsigned char byte;
 typedef unsigned int word;
 typedef word address;
 
+extern word reg[8];
+
+#define pc reg[7]
+
 struct Argument {
     word value;
     address adr;
 };
+
 
 extern struct Argument ss;
 extern struct Argument dd;
