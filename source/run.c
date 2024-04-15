@@ -49,20 +49,20 @@ Argument get_mr(word w)
     {
 
         case 0:
-            ss.adr = current_reg;
-            ss.value = reg[current_reg];
+            res.adr = current_reg;
+            res.value = reg[current_reg];
 
             break;
 
         case 1:
-            ss.adr = reg[current_reg];
-            ss.value = w_read(ss.adr);
+            res.adr = reg[current_reg];
+            res.value = w_read(ss.adr);
 
             break;
 
         case 2:
-            ss.adr = reg[current_reg];
-            ss.value = w_read(ss.adr);
+            res.adr = reg[current_reg];
+            res.value = w_read(ss.adr);
             pc += 2;
 
             break;
@@ -72,8 +72,6 @@ Argument get_mr(word w)
             exit(1);
 
     }
-
-
 
     return res;
 }
@@ -92,7 +90,8 @@ Command parse_cmd (word w)
             }
         }
 
-
+    ss = get_mr(w);
+    dd = get_mr(w >> 6);
 
     return res;
 }
