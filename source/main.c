@@ -8,6 +8,7 @@
 #include "../headers/run.h"
 #include "../headers/test_mem.h"
 #include "../headers/load.h"
+#include "../headers/command.h"
 
 int main(int argc, char *argv[])
 {
@@ -19,6 +20,7 @@ int main(int argc, char *argv[])
         exit(0);
     }
     load_file(argv[1]);
+
 
     run();
 

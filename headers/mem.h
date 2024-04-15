@@ -11,6 +11,7 @@ extern word reg[8];
 struct Argument {
     word value;
     address adr;
+    int scope;
 };
 
 

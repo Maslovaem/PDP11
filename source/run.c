@@ -17,22 +17,20 @@ void run()
         log_(TRACE, "%06o %06o: ", pc, w);
         pc += 2;
 
-        for (int i = 0; i < 4; i++)
-        {
-            if ( (w & command[i].mask) == command[i].opcode)
-            {
-                printf("%s\n", command[i].name);
-                command[i].do_command();
+        Command cmd = parse_cmd(w);
 
-                break;
-            }
-        }
+        cmd.do_command();
+        log_(TRACE, "\n");
+
     }
 }
 
 word read_cmd ()
 {
     word w = w_read(pc);
+
+    log_(TRACE, "%06o %06o: ", pc, w);
+
     pc += 2;
 
     return w;
@@ -49,21 +47,39 @@ Argument get_mr(word w)
     {
 
         case 0:
+
             res.adr = current_reg;
             res.value = reg[current_reg];
+
+            res.scope = 1;
+
+            log_(TRACE, "R%d ", current_reg);
 
             break;
 
         case 1:
             res.adr = reg[current_reg];
-            res.value = w_read(ss.adr);
+            res.value = w_read(res.adr);
+
+            res.scope = 0;
+
+            log_(TRACE, "(R%d) ", current_reg);
 
             break;
 
         case 2:
+            //log_(TRACE, "%06o #R%d", w_read(pc), current_reg);
+
             res.adr = reg[current_reg];
-            res.value = w_read(ss.adr);
+            res.value = w_read(res.adr);
             pc += 2;
+
+            res.scope = 0;
+
+            if (current_reg == 7)
+                log_(TRACE, "#%o ", res.value);
+            else
+                log_(TRACE, "(R%d)+ ", current_reg);
 
             break;
 
@@ -85,13 +101,17 @@ Command parse_cmd (word w)
             if ( (w & command[i].mask) == command[i].opcode)
             {
                 res = command[i];
+                log_(TRACE, "%s ", res.name);
 
                 break;
             }
         }
 
-    ss = get_mr(w);
-    dd = get_mr(w >> 6);
+    ss = get_mr(w >> 6);
+    dd = get_mr(w);
+
+    log_(TRACE, "ss.scope = %d, dd.scope = %d\n", ss.scope, dd.scope);
 
     return res;
 }
+
