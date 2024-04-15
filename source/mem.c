@@ -55,7 +55,7 @@ void reg_dump()
     }
 }
 
-struct Argument get_mr(word w)
+/*struct Argument get_mr(word w)
 {
     Argument res;
 
@@ -93,5 +93,5 @@ struct Argument get_mr(word w)
     }
 
     return res;
-}
+}*/
 
