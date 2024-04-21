@@ -56,6 +56,12 @@ void test_mem()
     //проверка работы mov
     test_mov();
 
+    //проверка моды 1
+    test_mode1_toreg();
+
+    //проверка моды 2
+    test_mode2();
+
 }
 
 void test_parse_mov()
@@ -88,5 +94,61 @@ void test_mov()
     cmd.do_command();
     assert(reg[3] = 34);
     assert(reg[5] = 34);
+    log_(TRACE, " ... OK\n");
+}
+
+void test_mode1_toreg()
+{
+    log_(TRACE, __FUNCTION__);
+
+    reg[3] = 12;    // dd
+    reg[5] = 0200;  // ss
+    w_write(0200, 34);
+
+
+    Command cmd = parse_cmd(0011503);
+
+
+    assert(ss.value == 34);
+    assert(ss.adr == 0200);
+    assert(dd.value == 12);
+    assert(dd.adr == 3);
+
+
+    cmd.do_command();
+
+
+    assert(reg[3] = 34);
+    assert(reg[5] = 0200); //the number of the reg did not change
+
+
+    log_(TRACE, " ... OK\n");
+}
+
+void test_mode2()
+{
+    log_(TRACE, __FUNCTION__);
+
+    reg[3] = 12;    // dd
+    reg[5] = 0200;  // ss
+    w_write(0200, 34);
+
+
+    Command cmd = parse_cmd(0012503);
+
+
+    assert(ss.value == 34);
+    assert(ss.adr == 0200);
+    assert(dd.value == 12);
+    assert(dd.adr == 3);
+
+
+    cmd.do_command();
+
+
+    assert(reg[3] = 34);
+    assert(reg[5] = 0202); //the number of the reg did not change
+
+
     log_(TRACE, " ... OK\n");
 }
