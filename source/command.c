@@ -26,7 +26,7 @@ void do_add()
 
 void do_mov()
 {
-    w_write(dd.adr, ss.value, dd.scope);
+    w_write(dd.adr, ss.value);
 }
 
 void do_nothing()

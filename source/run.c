@@ -51,8 +51,6 @@ Argument get_mr(word w)
             res.adr = current_reg;
             res.value = reg[current_reg];
 
-            res.scope = 1;
-
             log_(TRACE, "R%d ", current_reg);
 
             break;
@@ -60,8 +58,6 @@ Argument get_mr(word w)
         case 1:
             res.adr = reg[current_reg];
             res.value = w_read(res.adr);
-
-            res.scope = 0;
 
             log_(TRACE, "(R%d) ", current_reg);
 
@@ -73,8 +69,6 @@ Argument get_mr(word w)
             res.adr = reg[current_reg];
             res.value = w_read(res.adr);
             pc += 2;
-
-            res.scope = 0;
 
             if (current_reg == 7)
                 log_(TRACE, "#%o ", res.value);
@@ -109,8 +103,6 @@ Command parse_cmd (word w)
 
     ss = get_mr(w >> 6);
     dd = get_mr(w);
-
-    log_(TRACE, "ss.scope = %d, dd.scope = %d\n", ss.scope, dd.scope);
 
     return res;
 }
