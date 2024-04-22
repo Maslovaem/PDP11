@@ -16,6 +16,8 @@ struct Argument {
 
 extern struct Argument ss;
 extern struct Argument dd;
+extern struct Argument nn;
+extern struct Argument r;
 
 byte b_read(address adr);
 void b_write(address adr, byte value);

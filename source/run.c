@@ -90,7 +90,7 @@ Command parse_cmd (word w)
 {
     Command res;
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < cmd_amount; i++)
         {
             if ( (w & command[i].mask) == command[i].opcode)
             {
@@ -101,8 +101,22 @@ Command parse_cmd (word w)
             }
         }
 
-    ss = get_mr(w >> 6);
-    dd = get_mr(w);
+    if ( (res.params) & HAS_SS)
+    {
+        ss = get_mr(w >> 6);
+    }
+    if ( (res.params) & HAS_DD)
+    {
+        dd = get_mr(w);
+    }
+    if ( (res.params) & HAS_NN)
+    {
+        nn.value = w & 0000077;
+    }
+    if ( (res.params) & HAS_R)
+    {
+        r.value = (w >> 6) & 0000007;
+    }
 
     return res;
 }

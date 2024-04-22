@@ -10,6 +10,8 @@ word reg[8];
 
 struct Argument ss;
 struct Argument dd;
+struct Argument nn;
+struct Argument r;
 
 void b_write(address adr, byte value)
 {

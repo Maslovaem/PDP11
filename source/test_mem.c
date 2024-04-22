@@ -62,6 +62,8 @@ void test_mem()
     //проверка моды 2
     test_mode2();
 
+    //проверка разбора аргументов для sob
+    test_parse_sob();
 }
 
 void test_parse_mov()
@@ -151,4 +153,20 @@ void test_mode2()
 
 
     log_(TRACE, " ... OK\n");
+}
+
+void test_parse_sob()
+{
+    log_(TRACE, __FUNCTION__);
+
+    Command cmd = parse_cmd(0077105);
+
+    assert(r.value == 1);
+    log_(TRACE, "nn.value = %d\n", nn.value);
+    assert(nn.value == 5);
+}
+
+void test_sob()
+{
+    
 }

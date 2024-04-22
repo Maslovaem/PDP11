@@ -3,6 +3,7 @@
 #include "../headers/mem.h"
 #include "../headers/command.h"
 
+#define cmd_amount 5
 
 void run();
 struct Argument get_mr(word w);
