@@ -7,3 +7,4 @@ void test_mov();
 void test_mode1_toreg();
 void test_mode2();
 void test_parse_sob();
+void test_sob();

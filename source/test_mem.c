@@ -64,6 +64,8 @@ void test_mem()
 
     //проверка разбора аргументов для sob
     test_parse_sob();
+
+    test_sob();
 }
 
 void test_parse_mov()
@@ -161,12 +163,29 @@ void test_parse_sob()
 
     Command cmd = parse_cmd(0077105);
 
-    assert(r.value == 1);
-    log_(TRACE, "nn.value = %d\n", nn.value);
+    assert(r.adr == 1);
     assert(nn.value == 5);
+
+    log_(TRACE, "... OK\n");
 }
 
 void test_sob()
 {
-    
+    log_(TRACE, __FUNCTION__);
+    reg[3] = 1;    // r
+    pc = 01200;    //
+    Command cmd = parse_cmd(0077306);
+    cmd.do_command();
+    assert(reg[3] == 0);
+    assert(pc == 01200);
+
+    reg[3] = 4;    // r
+    pc = 01006;    //
+    cmd = parse_cmd(0077303);
+    cmd.do_command();
+    assert(reg[3] == 3);
+    assert(pc == 01000);
+
+    log_(TRACE, " ... OK\n");
+
 }

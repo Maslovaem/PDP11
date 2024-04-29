@@ -37,7 +37,7 @@ void do_nothing()
 
 void do_sob()
 {
-    if (--r.value != 0)
+    if (--reg[r.adr] != 0)
     {
         pc = pc - 2*nn.value;
     }

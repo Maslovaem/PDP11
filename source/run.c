@@ -115,7 +115,7 @@ Command parse_cmd (word w)
     }
     if ( (res.params) & HAS_R)
     {
-        r.value = (w >> 6) & 0000007;
+        r.adr = (w >> 6) & 0000007;
     }
 
     return res;
