@@ -235,3 +235,4 @@ void test_get_type()
 
     log_(TRACE, " ... OK\n");
 }
+

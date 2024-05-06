@@ -6,6 +6,8 @@
 #include "../headers/logger.h"
 #include "../headers/command.h"
 
+#define prn fprintf(stderr, "function: %s, line: %d\n", __FUNCTION__, __LINE__)
+
 void run()
 {
     pc = 01000;
@@ -44,6 +46,8 @@ Argument get_mr(word w)
 
     unsigned int current_reg = w & 7;
     unsigned int mode = (w >> 3) & 7;
+
+    //log_(TRACE, "mode = %u", mode);
 
     switch (mode)
     {
@@ -115,7 +119,7 @@ Command parse_cmd (word w)
 {
     Command res;
 
-    for (int i = 0; i < cmd_amount; i++)
+    for (int i = 0; ; i++)
         {
             if ( (w & command[i].mask) == command[i].opcode)
             {
