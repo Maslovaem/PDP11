@@ -9,7 +9,7 @@ Command command[] = {
     {0170000, 0010000, "mov", do_mov, HAS_SS | HAS_DD},
     {0177777, 0000000, "halt", do_halt, NO_PARAMS},
     {0077000, 0077000, "sob", do_sob, HAS_NN | HAS_R},
-    {0000000, 0000000, "unknown", do_nothing, NO_PARAMS}, //has to be the last command
+    {0000000, 0000000, "unknown", do_nothing, NO_PARAMS} //has to be the last command
 };
 
 

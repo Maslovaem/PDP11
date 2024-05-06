@@ -21,6 +21,8 @@ void run()
 
         cmd.do_command();
         log_(TRACE, "\n");
+        reg_dump();
+        log_(TRACE, "\n");
 
     }
 }
@@ -68,7 +70,30 @@ Argument get_mr(word w)
 
             res.adr = reg[current_reg];
             res.value = w_read(res.adr);
-            pc += 2;
+
+            get_type(w);
+
+            if (!is_byte_cmd || current_reg >= 6)
+            {
+                reg[current_reg] += 2;
+            }
+            else
+            {
+                reg[current_reg] += 1;
+            }
+
+            if (current_reg == 7)
+                log_(TRACE, "#%o ", res.value);
+            else
+                log_(TRACE, "(R%d)+ ", current_reg);
+
+            break;
+
+        case 3:
+
+            res.adr = w_read(reg[current_reg]);
+            res.value = w_read(res.adr);
+            reg[current_reg] += 2;
 
             if (current_reg == 7)
                 log_(TRACE, "#%o ", res.value);
@@ -112,12 +137,25 @@ Command parse_cmd (word w)
     if ( (res.params) & HAS_NN)
     {
         nn.value = w & 0000077;
+        log_(TRACE, " NN = %d ", nn.value);
     }
     if ( (res.params) & HAS_R)
     {
         r.adr = (w >> 6) & 0000007;
+        log_(TRACE, " R%d ", r.adr);
     }
 
     return res;
 }
 
+void get_type(word w)
+{
+    if ( (w >> 15) & 7)
+    {
+        is_byte_cmd = 1;
+    }
+    else
+    {
+        is_byte_cmd = 0;
+    }
+}

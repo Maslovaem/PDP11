@@ -13,6 +13,8 @@ struct Argument dd;
 struct Argument nn;
 struct Argument r;
 
+unsigned int is_byte_cmd = 0;
+
 void b_write(address adr, byte value)
 {
     mem[adr] = value;
@@ -38,7 +40,7 @@ void w_write (address adr, word val)
 {
     if (adr < 8) {
         // считаем первые 8 адресов номерами регистров
-        reg[adr] = val;
+        reg[adr] = val & 0xFFFF;
     }
     else {
         mem[adr] = val;
@@ -63,4 +65,10 @@ void reg_dump()
     }
 }
 
-
+void reg_clear()
+{
+    for (int i = 0; i < 8; i++)
+    {
+        reg[i] = 0;
+    }
+}

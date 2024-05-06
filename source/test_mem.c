@@ -66,6 +66,13 @@ void test_mem()
     test_parse_sob();
 
     test_sob();
+
+    test_mode3();
+
+    //байтовый или нет тип команды
+    test_get_type();
+
+    reg_clear();//в конце тестов
 }
 
 void test_parse_mov()
@@ -145,6 +152,7 @@ void test_mode2()
     assert(ss.adr == 0200);
     assert(dd.value == 12);
     assert(dd.adr == 3);
+    assert(reg[5] == 0202);
 
 
     cmd.do_command();
@@ -166,7 +174,7 @@ void test_parse_sob()
     assert(r.adr == 1);
     assert(nn.value == 5);
 
-    log_(TRACE, "... OK\n");
+    log_(TRACE, " ... OK\n");
 }
 
 void test_sob()
@@ -188,4 +196,42 @@ void test_sob()
 
     log_(TRACE, " ... OK\n");
 
+}
+
+void test_mode3()
+{
+    log_(TRACE, __FUNCTION__);
+
+    reg[3] = 12;    // dd
+    reg[5] = 0200;  // ss
+    w_write(0200, 0204);
+    w_write(0204, 34);
+
+    Command cmd = parse_cmd(0013503);
+
+    assert(ss.value == 34);
+    assert(ss.adr == 0204);
+    assert(dd.value == 12);
+    assert(dd.adr == 3);
+    assert(reg[5] == 0202);
+
+    cmd.do_command();
+
+    assert(reg[3] = 34);
+    assert(reg[5] = 0202); //the number of the reg did not change
+
+    log_(TRACE, " ... OK\n");
+}
+
+void test_get_type()
+{
+    get_type(0112203);
+    log_(TRACE, __FUNCTION__);
+
+    assert(is_byte_cmd);
+
+    get_type(0012203);
+    assert(!is_byte_cmd);
+
+    log_(TRACE, " ... OK\n");
 }
