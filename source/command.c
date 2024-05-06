@@ -47,7 +47,7 @@ void do_sob()
 
 void do_movb()
 {
-    w_write(dd.adr, ss.value);
+    b_write(dd.adr, ss.value);
 }
 
 void clr()

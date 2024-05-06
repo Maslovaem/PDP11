@@ -17,7 +17,7 @@ void test_mem()
 
     // пишем байт, читаем байт
     log_(TRACE, "Read and write byte\n");
-    a = 0;
+    a = 16;
     b0 = 0x12;
     b_write(a, b0);
     bres = b_read(a);
@@ -37,7 +37,7 @@ void test_mem()
 
     // пишем 2 байта, читаем 1 слово
     log_(TRACE, "Write 2 bytes, read word\n");
-    a = 4;
+    a = 24;
     w = 0xa1b2;
     b0 = 0xb2;
     b1 = 0xa1;

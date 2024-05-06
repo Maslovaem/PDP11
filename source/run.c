@@ -75,8 +75,6 @@ Argument get_mr(word w)
             res.adr = reg[current_reg];
             res.value = w_read(res.adr);
 
-            get_type(w);
-
             if (!is_byte_cmd || current_reg >= 6)
             {
                 reg[current_reg] += 2;
@@ -118,6 +116,8 @@ Argument get_mr(word w)
 Command parse_cmd (word w)
 {
     Command res;
+
+    get_type(w);
 
     for (int i = 0; ; i++)
         {

@@ -17,7 +17,21 @@ unsigned int is_byte_cmd = 0;
 
 void b_write(address adr, byte value)
 {
-    mem[adr] = value;
+    if (adr < 8)
+    {
+        if( (value >> 7) == 1)
+        {
+            reg[adr] = (value | 0xFF00);
+        }
+        else
+        {
+            reg[adr] = value;
+        }
+    }
+    else
+    {
+        mem[adr] = value;
+    }
 }
 
 byte b_read(address adr)
