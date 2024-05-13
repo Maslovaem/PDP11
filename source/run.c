@@ -180,3 +180,15 @@ void set_NZ(int cmd_result)
         psw = psw << 1;
     }
 }
+
+void set_C(int cmd_result)
+{
+    if (cmd_result >> 16)
+    {
+        psw = psw | 1;
+    }
+    else
+    {
+        psw = (psw >> 1) << 1;
+    }
+}

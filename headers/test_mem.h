@@ -11,3 +11,4 @@ void test_sob();
 void test_mode3();
 void test_get_type();
 void test_set_NZ();
+void test_set_C();

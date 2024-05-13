@@ -74,6 +74,8 @@ void test_mem()
 
     test_set_NZ();
 
+    test_set_C();
+
     reg_clear();//в конце тестов
 }
 
@@ -253,6 +255,19 @@ void test_set_NZ()
     set_NZ(-5);
     assert(psw >> 3);
     assert( !( (psw >> 1) & 1) );
+
+    log_(TRACE, " ... OK\n");
+}
+
+void test_set_C()
+{
+    log_(TRACE, __FUNCTION__);
+
+    set_C(0xFFFF + 0xFFFF);
+    assert(psw & 1);
+
+    set_C(0x1 + 0x1);
+    assert( !(psw & 1) );
 
     log_(TRACE, " ... OK\n");
 }
