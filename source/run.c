@@ -163,3 +163,20 @@ void get_type(word w)
         is_byte_cmd = 0;
     }
 }
+
+void set_NZ(int cmd_result)
+{
+    psw = 0;
+
+    if (cmd_result < 0)
+    {
+        psw = (psw >> 3) | 1;
+        psw = psw << 3;
+    }
+
+    if (cmd_result == 0)
+    {
+        psw = (psw >> 1) | 1;
+        psw = psw << 1;
+    }
+}

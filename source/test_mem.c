@@ -72,6 +72,8 @@ void test_mem()
     //байтовый или нет тип команды
     test_get_type();
 
+    test_set_NZ();
+
     reg_clear();//в конце тестов
 }
 
@@ -236,3 +238,21 @@ void test_get_type()
     log_(TRACE, " ... OK\n");
 }
 
+void test_set_NZ()
+{
+    log_(TRACE, __FUNCTION__);
+
+    set_NZ(5);
+    assert( !(psw >> 3) );
+    assert( !( (psw >> 1) & 1) );
+
+    set_NZ(0);
+    assert( !(psw >> 3) );
+    assert( (psw >> 1) & 1 );
+
+    set_NZ(-5);
+    assert(psw >> 3);
+    assert( !( (psw >> 1) & 1) );
+
+    log_(TRACE, " ... OK\n");
+}

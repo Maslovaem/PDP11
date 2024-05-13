@@ -15,6 +15,8 @@ struct Argument r;
 
 unsigned int is_byte_cmd = 0;
 
+unsigned char psw = 0;
+
 void b_write(address adr, byte value)
 {
     if (adr < 8)
@@ -86,3 +88,4 @@ void reg_clear()
         reg[i] = 0;
     }
 }
+

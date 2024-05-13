@@ -21,6 +21,8 @@ extern struct Argument r;
 
 extern unsigned int is_byte_cmd;
 
+extern unsigned char psw;
+
 byte b_read(address adr);
 void b_write(address adr, byte value);
 word w_read(address adr);
